@@ -1,6 +1,6 @@
 {
   "name": "hono-rate-limiter-with-lemmascript",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Formally-verified sliding-window rate limiter for Hono, proved with LemmaScript. Never more than `limit` admissions in any window of length W — the cross-boundary 2× burst a fixed-window counter allows is provably impossible.",
   "keywords": [
