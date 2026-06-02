@@ -6,9 +6,9 @@
 > happen. The load-bearing invariant here is a *sliding* window, so that burst is provably
 > impossible.
 
-**Status:** _built and published._ Stages 0–3 done — verified core (23 Dafny VCs), Hono
-middleware, demo, and live HTTP server all working; shipped to npm as
-`hono-rate-limiter-with-lemmascript`. Stage 4 (variants) deferred. This document is kept as the
+**Status:** _built._ Stages 0–3 done — verified core (23 Dafny VCs), Hono
+middleware, demo, and live HTTP server all working. Stage 4 (variants) deferred. Kept as a
+case study, not distributed as a package. This document is kept as the
 design of record; the staged plan below reflects what landed.
 **Category:** greenfield verified feature, distributed through a brownfield host's **extension
 seam** (Hono middleware, `app.use(...)`) — a **standalone package** that `import`s Hono, **not a

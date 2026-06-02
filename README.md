@@ -61,10 +61,14 @@ admission logs, no floats. Dafny machine-checks (23 verification tasks, run in C
 The proof and a walkthrough are in [`DESIGN.md`](DESIGN.md) and
 [`src/core.verified.dfy`](src/core.verified.dfy).
 
-## Install
+## Get it
+
+This is a [LemmaScript](https://lemmascript.com) case study, not a published package — clone and
+build it locally:
 
 ```sh
-npm i hono-rate-limiter-with-lemmascript    # hono is a peer dependency
+git clone https://github.com/midspiral/hono-rate-limiter-with-lemmascript
+cd hono-rate-limiter-with-lemmascript && npm install   # hono comes along as a dependency
 ```
 
 ## Use
