@@ -1,0 +1,61 @@
+{
+  "name": "hono-rate-limiter-with-lemmascript",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Formally-verified sliding-window rate limiter for Hono, proved with LemmaScript. Never more than `limit` admissions in any window of length W — the cross-boundary 2× burst a fixed-window counter allows is provably impossible.",
+  "keywords": [
+    "hono",
+    "rate-limit",
+    "rate-limiter",
+    "ratelimit",
+    "middleware",
+    "sliding-window",
+    "verified",
+    "formal-verification",
+    "lemmascript"
+  ],
+  "license": "MIT",
+  "author": "midspiral <namin@midspiral.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/midspiral/hono-rate-limiter-with-lemmascript.git"
+  },
+  "homepage": "https://github.com/midspiral/hono-rate-limiter-with-lemmascript#readme",
+  "bugs": "https://github.com/midspiral/hono-rate-limiter-with-lemmascript/issues",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src/core.verified.ts",
+    "src/core.verified.dfy",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "regen": "npx tsx ../LemmaScript/tools/src/lsc.ts regen --backend=dafny src/core.verified.ts",
+    "verify": "../LemmaScript/tools/check.sh dafny",
+    "demo": "tsx examples/leak.ts",
+    "serve": "tsx examples/server.ts"
+  },
+  "peerDependencies": {
+    "hono": ">=4"
+  },
+  "devDependencies": {
+    "@hono/node-server": "^2.0.4",
+    "@types/node": "^22.0.0",
+    "hono": "^4.6.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

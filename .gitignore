@@ -1,0 +1,18 @@
+# Dependencies
+node_modules
+
+# Build output (the published package compiles src/*.ts -> dist/)
+dist
+*.tsbuildinfo
+
+# regen merge-anchor scratch files (transient)
+*.dfy.base
+*.dfy.merged
+
+# Editor / OS
+.DS_Store
+*.log
+
+# NOTE: src/core.verified.dfy and src/core.verified.dfy.gen are intentionally
+# TRACKED — CI regenerates and diff-checks them against the .ts (see
+# LemmaScript-files.txt).
