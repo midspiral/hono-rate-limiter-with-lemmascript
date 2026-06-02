@@ -1,7 +1,8 @@
 # hono-rate-limiter-with-lemmascript
 
 **A formally-verified rate limiter for [Hono](https://hono.dev).** Most limiters are
-correct-on-faith, and almost all are subtly wrong at one specific seam — the window boundary.
+correct-on-faith, and the common *fixed-window* counter is subtly wrong at one specific seam —
+the window boundary.
 This one's admission decision is a *machine-checked theorem*, proved in
 [LemmaScript](https://lemmascript.com) (TypeScript verified through Dafny) and shipped as the
 limiter's actual runtime code:
@@ -146,4 +147,11 @@ npm run verify       # regenerate + Dafny-check core.verified.ts (needs Dafny + 
 
 A [LemmaScript](https://lemmascript.com) case study, working end-to-end. The verified core is
 the sliding-window admission decision; the Hono middleware, store, and keying are the trusted
-shell. Redis-backed CAS store and a token-bucket variant are natural next steps.
+shell.
+
+The timestamp-log design verified here is correct *by construction*, so the proof buys the
+machine-checked guarantee and the fixed-window counterexample — not the catch of a subtle bug in
+this design. The boundary math that *is* error-prone lives elsewhere: in the efficient ring-buffer
+"sliding-window counter" approximations people actually ship, and in the fractional arithmetic of
+token-bucket / GCRA limiters — natural next targets for a verified core, where the algorithm
+itself is the hard part. A Redis-backed CAS store is the other obvious extension.
