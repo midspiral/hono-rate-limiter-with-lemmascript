@@ -6,7 +6,10 @@
 > happen. The load-bearing invariant here is a *sliding* window, so that burst is provably
 > impossible.
 
-**Status:** _design._ Nothing built yet — spec + staged plan.
+**Status:** _built and published._ Stages 0–3 done — verified core (23 Dafny VCs), Hono
+middleware, demo, and live HTTP server all working; shipped to npm as
+`hono-rate-limiter-with-lemmascript`. Stage 4 (variants) deferred. This document is kept as the
+design of record; the staged plan below reflects what landed.
 **Category:** greenfield verified feature, distributed through a brownfield host's **extension
 seam** (Hono middleware, `app.use(...)`) — a **standalone package** that `import`s Hono, **not a
 fork**. Verification flavor: an **invariant over a small stateful core** (the app-native flavor),
@@ -67,7 +70,7 @@ function admit(log, now, W, limit) {
 
 (`now` is non-decreasing across calls — a `requires`/caller obligation, the clock's job.)
 
-## 4. Theorems (planned)
+## 4. Theorems (proven)
 
 1. **Bound** — after every `admit`, `|log| <= limit`.
 2. **Window-faithful** — after every `admit`, `log` is exactly the admitted timestamps in
@@ -95,7 +98,7 @@ function admit(log, now, W, limit) {
 ## 6. Host integration — the Hono seam
 
 ```ts
-import { rateLimit } from '@midspiral/hono-ratelimit';
+import { rateLimit } from 'hono-rate-limiter-with-lemmascript';
 app.use('*', rateLimit({ limit: 100, windowMs: 60_000, key: (c) => c.req.header('x-api-key') ?? ip(c) }));
 ```
 
@@ -127,14 +130,14 @@ Observed against a real running server, not asserted.
 
 | Stage | Lands | Status |
 |---|---|---|
-| **0 — core invariant** | `admit`; **Bound** + **Window-faithful** | _planned_ |
-| **1 — sliding bound + counterexample** | the headline window-bound theorem; the fixed-window-leaks witness | _planned_ |
-| **2 — Hono middleware** | store + keying + the `app.use` middleware wiring the verified core | _planned_ |
-| **3 — demo** | running server; sliding holds vs fixed-window leaks, observed | _planned_ |
-| **4 — variants (optional)** | token-bucket core (burst allowance, `0 <= tokens <= cap`); Redis CAS store note | _deferred_ |
+| **0 — core invariant** | `admit`; **Bound** + **Window-faithful** | ✅ done (`core.verified.ts`/`.dfy`) |
+| **1 — sliding bound + counterexample** | the headline window-bound theorem (`run`/`SlidingWindowBound`); the fixed-window-leaks witness (`FixedWindowLeaks`) | ✅ done (23 Dafny VCs) |
+| **2 — Hono middleware** | store + keying + the `app.use` middleware wiring the verified core | ✅ done (`middleware.ts`, `store.ts`) |
+| **3 — demo** | running server; sliding holds vs fixed-window leaks, observed | ✅ done (`examples/server.ts`, `examples/leak.ts`) |
+| **4 — variants (optional)** | token-bucket core (burst allowance, `0 <= tokens <= cap`); Redis CAS store. A Redis adapter needs an **async** `LogStore` (the shipped interface is sync) plus compare-and-set for per-key atomicity. | _deferred_ |
 
-**Spike:** Stage 0 + the counterexample. If the bound + window-faithful invariants are clean and
-the fixed-window leak falls out as a short trace, the spine holds.
+**Spike (held):** Stage 0 + the counterexample. The bound + window-faithful invariants were
+clean and the fixed-window leak fell out as a short trace, so the spine held and the rest followed.
 
 ## 10. What is *not* verified
 
