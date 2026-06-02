@@ -46,7 +46,8 @@
     "regen": "npx tsx ../LemmaScript/tools/src/lsc.ts regen --backend=dafny src/core.verified.ts",
     "verify": "../LemmaScript/tools/check.sh dafny",
     "demo": "tsx examples/leak.ts",
-    "serve": "tsx examples/server.ts"
+    "serve": "tsx examples/server.ts",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "hono": ">=4"
