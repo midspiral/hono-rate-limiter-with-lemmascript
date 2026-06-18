@@ -1,5 +1,8 @@
 # hono-rate-limiter-with-lemmascript
 
+[![LemmaScript: verified](https://img.shields.io/badge/LemmaScript-verified-brightgreen)](https://github.com/midspiral/hono-rate-limiter-with-lemmascript/actions/workflows/lemmascript.yml)
+
+
 **A formally-verified rate limiter for [Hono](https://hono.dev).** Most limiters are
 correct-on-faith, and the common *fixed-window* counter is subtly wrong at one specific seam —
 the window boundary.
