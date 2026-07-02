@@ -20,6 +20,7 @@ lemma pruneWindow_ensures(log: seq<int>, now: int, W: int)
   requires forall k: int :: ((0 <= k) ==> (k < |log|) ==> (log[k] <= now))
   ensures (|pruneWindow(log, now, W)| <= |log|)
   ensures forall k: int :: ((0 <= k) ==> (k < |pruneWindow(log, now, W)|) ==> (((now - W) < pruneWindow(log, now, W)[k]) && (pruneWindow(log, now, W)[k] <= now)))
+  ensures (|pruneWindow(log, now, W)| == CountIn(log, now, W))
 {
 }
 
@@ -32,6 +33,7 @@ function activeCount(log: seq<int>, now: int, W: int): int
 lemma activeCount_ensures(log: seq<int>, now: int, W: int)
   requires forall k: int :: ((0 <= k) ==> (k < |log|) ==> (log[k] <= now))
   ensures (activeCount(log, now, W) <= |log|)
+  ensures (activeCount(log, now, W) == CountIn(log, now, W))
 {
 }
 

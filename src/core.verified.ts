@@ -46,6 +46,7 @@ export function pruneWindow(log: number[], now: number, W: number): number[] {
   //@ decreases log.length
   //@ ensures \result.length <= log.length
   //@ ensures forall(k, 0 <= k && k < \result.length ==> now - W < \result[k] && \result[k] <= now)
+  //@ ensures \result.length === CountIn(log, now, W)
   if (log.length === 0) {
     return [];
   }
@@ -61,6 +62,7 @@ export function pruneWindow(log: number[], now: number, W: number): number[] {
 export function activeCount(log: number[], now: number, W: number): number {
   //@ requires forall(k, 0 <= k && k < log.length ==> log[k] <= now)
   //@ ensures \result <= log.length
+  //@ ensures \result === CountIn(log, now, W)
   return pruneWindow(log, now, W).length;
 }
 

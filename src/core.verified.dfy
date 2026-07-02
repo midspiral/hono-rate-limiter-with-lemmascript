@@ -5,6 +5,7 @@ datatype AdmitResult = AdmitResult(log: seq<int>, ok: bool)
 function pruneWindow(log: seq<int>, now: int, W: int): seq<int>
   requires forall k: int :: ((0 <= k) ==> (k < |log|) ==> (log[k] <= now))
   decreases |log|
+  ensures |pruneWindow(log, now, W)| == CountIn(log, now, W)
 {
   if (|log| == 0) then
     []
@@ -20,6 +21,7 @@ lemma pruneWindow_ensures(log: seq<int>, now: int, W: int)
   requires forall k: int :: ((0 <= k) ==> (k < |log|) ==> (log[k] <= now))
   ensures (|pruneWindow(log, now, W)| <= |log|)
   ensures forall k: int :: ((0 <= k) ==> (k < |pruneWindow(log, now, W)|) ==> (((now - W) < pruneWindow(log, now, W)[k]) && (pruneWindow(log, now, W)[k] <= now)))
+  ensures (|pruneWindow(log, now, W)| == CountIn(log, now, W))
   decreases |log|
 {
   // Structural induction over the log: the kept set of the tail is
@@ -33,6 +35,7 @@ lemma pruneWindow_ensures(log: seq<int>, now: int, W: int)
 
 function activeCount(log: seq<int>, now: int, W: int): int
   requires forall k: int :: ((0 <= k) ==> (k < |log|) ==> (log[k] <= now))
+  ensures activeCount(log, now, W) == CountIn(log, now, W)
 {
   |pruneWindow(log, now, W)|
 }
@@ -40,6 +43,7 @@ function activeCount(log: seq<int>, now: int, W: int): int
 lemma activeCount_ensures(log: seq<int>, now: int, W: int)
   requires forall k: int :: ((0 <= k) ==> (k < |log|) ==> (log[k] <= now))
   ensures (activeCount(log, now, W) <= |log|)
+  ensures (activeCount(log, now, W) == CountIn(log, now, W))
 {
   pruneWindow_ensures(log, now, W);   // |pruneWindow| <= |log|
 }
@@ -76,6 +80,17 @@ lemma admit_ensures(log: seq<int>, now: int, W: int, limit: int)
   } else {
     // rejected: result.log = active, inheriting pruneWindow's guarantees directly.
   }
+}
+
+// The true number of admissions in the window (now - W, now], counted
+// independently of pruneWindow.
+ghost function CountIn(log: seq<int>, now: int, W: int): int
+  decreases |log|
+{
+  if |log| == 0 then
+    0
+  else
+    (if (now - W) < log[0] && log[0] <= now then 1 else 0) + CountIn(log[1..], now, W)
 }
 
 // ════════════════════════════════════════════════════════════════════════════
